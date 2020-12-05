@@ -356,4 +356,4 @@ MigrationBackup/
 .history/
 
 # resource folder
-resource/
+**/resources/
