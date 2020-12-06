@@ -2,14 +2,14 @@ namespace Application.src
 {
     public class BackupSource
     {
-        public string ConfigurationFile { get; set; }
-        public string ConfigurationFilePath { get; set; }
+        public string File { get; set; }
+        public string FilePath { get; set; }
         public string ApplicationName { get; set; }
 
-        public BackupSource(string ConfigurationFile,string ConfigurationFilePath,string ApplicationName)
+        public BackupSource(string File,string FilePath,string ApplicationName)
         {
-            this.ConfigurationFile = ConfigurationFile;
-            this.ConfigurationFilePath = ConfigurationFilePath;
+            this.File = File;
+            this.FilePath = FilePath;
             this.ApplicationName = ApplicationName;
         }
     }

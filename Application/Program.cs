@@ -7,7 +7,7 @@ namespace Application
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(BackupDestination.RootPath);
+            Console.WriteLine("Welcome!");
             Console.ReadKey();
         }
     }

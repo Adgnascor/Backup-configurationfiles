@@ -4,39 +4,32 @@ namespace Application.src
 {
     public class Backup
     {
+        private const string BackupRootPath = @"$HOME/AppData/Local/Backup-configurationfiles/";
+        private string _backupFolderPath;
+        private string _backupFilePath;
         private BackupSource _backupSource;
-        private BackupDestination _backupDestination;
 
-        public Backup(BackupSource backupSource, BackupDestination backupDestination)
+
+        public Backup(BackupSource backupSource)
         {
-            _backupSource= backupSource;
-            _backupDestination= backupDestination;
+            _backupFolderPath= Path.Combine(BackupRootPath,backupSource.ApplicationName);
+            _backupFilePath= Path.Combine(_backupFolderPath, backupSource.File);
+            _backupSource=backupSource;
         }
 
         public bool BackupRootFolderExist()
-            => Directory.Exists(_backupDestination.RootPath);
+            => Directory.Exists(BackupRootPath);
 
-        public void CreateBackupRootFolder()
-            => Directory.CreateDirectory(_backupDestination.RootPath);
+        public void CreateBackupRoot()
+            => Directory.CreateDirectory(BackupRootPath);
 
-        private string _applicationBackupRootPath
-            => Path.Combine(_backupDestination.RootPath,_backupSource.ApplicationName);
+        public void CreateApplicationBackupFolder()
+            => Directory.CreateDirectory(_backupFolderPath);
 
-        private bool ApplicationBackupFolderExists()
-            => Directory.Exists(_applicationBackupRootPath);
+        public void CopyFileToBackup()
+            => File.Copy(_backupSource.FilePath, _backupFilePath);
 
-        private void CreateApplicationBackupFolder()
-            => Directory.CreateDirectory(_applicationBackupRootPath);
-
-        private bool FilesToBackupExists()
-            => File.Exists(Path.Combine(_applicationBackupRootPath, _backupSource.ConfigurationFile));
-
-        public void BackupApplicationFile()
-        {
-            if(!ApplicationBackupFolderExists())
-                CreateApplicationBackupFolder();
-            if(!FilesToBackupExists())
-                File.Copy(_backupSource.ConfigurationFilePath,_applicationBackupRootPath+_backupSource.ConfigurationFile);
-        }
+        public void StoreSrcPathAsTXTFile()
+            => File.WriteAllText(_backupFolderPath,$@"{_backupFolderPath}/SourcePath.txt");
     }
 }
