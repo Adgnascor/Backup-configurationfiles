@@ -13,9 +13,9 @@ namespace Application.src
             this.ApplicationName = ApplicationName;
         }
 
-        // TODO Create method for GetConfigFile
+        // TODO Create method for SetConfigFile
 
-        // TODO Create method for GetFilePath
+        // TODO Create method for SetFilePath
 
         // TODO Possible to get application root folder name? And set it as ApplicationName
     }

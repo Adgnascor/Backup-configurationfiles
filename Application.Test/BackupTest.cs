@@ -47,6 +47,7 @@ namespace Application.Test
             Assert.True(folderInfo.Exists);
         }
 
+        // TODO Finish up
         [Fact]
         public void CopyFileToBackup_Success()
         {
@@ -60,7 +61,17 @@ namespace Application.Test
             Assert.True(fileExists);
         }
 
+        // TODO Finish up
+        [Fact]
+        public void StoreSrcPathAsTXTFile_FileWritten()
+        {
+            // Arrange
+            var backup = new Backup(_backupSource);
+            backup.StoreSrcPathAsTXTFile();
+            // Act
+
+            // Assert
+            Assert.True(true);
+        }
     }
-
-
 }

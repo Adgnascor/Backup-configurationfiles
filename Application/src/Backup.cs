@@ -11,7 +11,6 @@ namespace Application.src
         private readonly string _backupFilePath;
         private readonly BackupSource _backupSource;
 
-
         public Backup(BackupSource backupSource)
         {
             _backupFolderPath= Path.Combine(_backupRootPath,backupSource.ApplicationName);
@@ -25,15 +24,13 @@ namespace Application.src
         public DirectoryInfo CreateBackupRoot()
             => Directory.CreateDirectory(_backupRootPath);
 
-
         public DirectoryInfo CreateApplicationBackupFolder()
             => Directory.CreateDirectory(_backupFolderPath);
 
         public void CopyFileToBackup()
-            => File.Copy(_backupSource.FilePath, _backupFilePath);
+            => File.Copy(_backupSource.FilePath, _backupFilePath, true);
 
-        // TODO use _backupSource.FilePath as content
         public void StoreSrcPathAsTXTFile()
-            => File.WriteAllText(_backupFolderPath,$@"{_backupFolderPath}/SourcePath.txt");
+            => File.WriteAllText(Path.Combine(_backupFolderPath,"ConfigSourcePath.txt"),_backupSource.FilePath);
     }
 }
