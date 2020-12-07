@@ -1,10 +1,16 @@
 namespace Application.src
 {
+    // TODO Rename to ApplicationFolder
     public class BackupSource
     {
-        public string ConfigFile { get; set; }
-        public string FilePath { get; set; }
+        // TODO Change all fields to private set
+        // TODO Rename to Name
         public string ApplicationName { get; set; }
+
+        // TODO Rename to FileName
+        public string ConfigFile { get; set; }
+
+        public string FilePath { get; set; }
 
         public BackupSource(string ConfigFile,string FilePath,string ApplicationName)
         {
@@ -12,11 +18,5 @@ namespace Application.src
             this.FilePath = FilePath;
             this.ApplicationName = ApplicationName;
         }
-
-        // TODO Create method for SetConfigFile
-
-        // TODO Create method for SetFilePath
-
-        // TODO Possible to get application root folder name? And set it as ApplicationName
     }
 }
