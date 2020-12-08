@@ -1,54 +1,29 @@
 using System;
 using System.IO;
-// TODO Make use of System.IO.Abstraction
+using System.IO.Abstractions;
 
 namespace Application.src
 {
     public class Backup
     {
-        // TODO Create class Initialize as static
-        // TODO Move to Initialize
-        private static readonly string _appDataLocal = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        private static readonly string _backupRootPath = $@"{_appDataLocal}/backup-configurationfiles";
-        //
-        
-        private readonly string _backupFolderPath;
-        private readonly string _backupFilePath;
+        private readonly ApplicationFolder _applicationFolder;
+        private readonly IFileSystem _fileSystem;
+        private readonly InitializeBackup _initializeBackup;
 
-
-        // TODO Rename to ApplicationFolder _applicationFolder
-        private readonly BackupSource _backupSource;
-
-        // TODO Implement IFileSystem as private readonly property and class Initialize
-        public Backup(BackupSource backupSource)
+        public Backup(ApplicationFolder applicationFolder, IFileSystem fileSystem, InitializeBackup initializeBackup)
         {
-
-            // TODO Remove from constructor and set them in methods below
-            _backupFolderPath= Path.Combine(_backupRootPath,backupSource.ApplicationName);
-            _backupFilePath= Path.Combine(_backupFolderPath, backupSource.ConfigFile);
-            //
-            
-            _backupSource=backupSource;
+            _fileSystem = fileSystem;
+            _applicationFolder=applicationFolder;
+            _initializeBackup = initializeBackup;
         }
 
-        // TODO Move method to Initialize, rename to BackupFolderExists
-        public bool BackupRootFolderExist()
-            => Directory.Exists(_backupRootPath);
+        public IDirectoryInfo CreateApplicationFolder()
+            => _fileSystem.Directory.CreateDirectory(Path.Combine(_initializeBackup.BackupFolderPath, _applicationFolder.Name));
 
-        // TODO Move metod to Initialize, rename to CreateBackupFolder
-        public DirectoryInfo CreateBackupRoot()
-            => Directory.CreateDirectory(_backupRootPath);
+        public void CopyFile()
+            => _fileSystem.File.Copy(_applicationFolder.FilePath, Path.Combine(_initializeBackup.BackupFolderPath),true);
 
-        // TODO Rename to CreateApplicationFolder
-        public DirectoryInfo CreateApplicationBackupFolder()
-            => Directory.CreateDirectory(_backupFolderPath);
-
-        // TODO Rename to File()
-        public void CopyFileToBackup()
-            => File.Copy(_backupSource.FilePath, _backupFilePath, true);
-
-        // TODO Rename to SaveOriginalFilePath
-        public void StoreSrcPathAsTXTFile()
-            => File.WriteAllText(Path.Combine(_backupFolderPath,"ConfigSourcePath.txt"),_backupSource.FilePath);
+        public void SaveOriginalFilePath()
+            => File.WriteAllText(Path.Combine(_initializeBackup.BackupFolderPath,_applicationFolder.Name,"ConfigSourcePath.txt"),_applicationFolder.FilePath);
     }
 }
