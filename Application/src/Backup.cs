@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.IO.Abstractions;
 
@@ -21,7 +20,7 @@ namespace Application.src
             => _fileSystem.Directory.CreateDirectory(Path.Combine(_initializeBackup.BackupFolderPath, _applicationFolder.Name));
 
         public void CopyFile()
-            => _fileSystem.File.Copy(_applicationFolder.FilePath, Path.Combine(_initializeBackup.BackupFolderPath),true);
+            => _fileSystem.File.Copy(_applicationFolder.FilePath, Path.Combine(_initializeBackup.BackupFolderPath, _applicationFolder.Name,_applicationFolder.FileName),true);
 
         public void SaveOriginalFilePath()
             => File.WriteAllText(Path.Combine(_initializeBackup.BackupFolderPath,_applicationFolder.Name,"ConfigSourcePath.txt"),_applicationFolder.FilePath);
