@@ -1,48 +1,28 @@
 ﻿using Application.src;
 using System.IO;
 using Xunit;
+using System.IO.Abstractions;
 
 namespace Application.Test
 {
     public class BackupTest
     {
-        private readonly BackupSource _backupSource = new BackupSource(
+        // Arrange
+        private static readonly ApplicationFolder _applicationFolder = new ApplicationFolder(
             "init.vim",
-            @"C:/Users/willi/dev/GitGub/Backup-configurationfiles/Application.Test/MockSourceApplicationsFolder/nvim/init.vim",
+            @"C:\Users\willi\dev\GitGub\Backup-configurationfiles\Application.Test\TestResources\MockSourceApplicationsFolder\nvim\init.vim",
             "nvim"
             );
 
-        [Fact]
-        public void BackupRootFolderExist_RootFolderExists()
-        {
-            // Arrange
-            var backup = new Backup(_backupSource);
-            // Act
-            var exists = backup.BackupRootFolderExist();
-            // Assert
-            Assert.True(exists);
-        }
-
-
-        [Fact]
-        public void CreateBackupRoot_Success()
-        {
-            // Arrange
-            var backup = new Backup(_backupSource);
-            // Act
-            var folderInfo= backup.CreateBackupRoot();
-            // Assert
-            Assert.True(folderInfo.Exists);
-        }
-
-
+        private static readonly IFileSystem _fileSystem = new FileSystem();
+        private static readonly InitializeBackup _initializeBackup = new InitializeBackup(_fileSystem, @"./TestResources/MockBackupFolder");
+        private readonly Backup _backup = new Backup(_applicationFolder, _fileSystem, _initializeBackup);
+        
         [Fact]
         public void CreateApplicationBackupFolder_Success()
         {
-            // Arrange
-            var backup = new Backup(_backupSource);
             // Act
-            var folderInfo= backup.CreateApplicationBackupFolder();
+            var folderInfo= _backup.CreateApplicationFolder();
             // Assert
             Assert.True(folderInfo.Exists);
         }
@@ -50,17 +30,21 @@ namespace Application.Test
         [Fact]
         public void CopyFileToBackup_Success()
         {
-            // Arrange
-            var backup = new Backup(_backupSource);
-            backup.CopyFileToBackup();
+            _backup.CopyFile();
             // Act
-            var fileExists = File.Exists(Path.Combine(_backupSource.FilePath));
-
+            var fileExists = _fileSystem.File.Exists(Path.Combine(_initializeBackup.BackupFolderPath,_applicationFolder.Name,_applicationFolder.FileName));
             // Assert
             Assert.True(fileExists);
         }
 
+        [Fact]
+        public void SaveOriginalFilePath_Success()
+        {
+            _backup.SaveOriginalFilePath();
+            // Act
+            var fileExist = _fileSystem.File.Exists(Path.Combine(_initializeBackup.BackupFolderPath,_applicationFolder.Name,"ConfigSourcePath.txt"));
+            // Assert
+            Assert.True(fileExist);
+        }
     }
-
-
 }

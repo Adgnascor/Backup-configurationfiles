@@ -1,39 +1,28 @@
-using System;
 using System.IO;
+using System.IO.Abstractions;
 
 namespace Application.src
 {
     public class Backup
     {
-        private static readonly string _appDataLocal = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        private static readonly string _backupRootPath = $@"{_appDataLocal}/backup-configurationfiles";
-        private readonly string _backupFolderPath;
-        private readonly string _backupFilePath;
-        private readonly BackupSource _backupSource;
+        private readonly ApplicationFolder _applicationFolder;
+        private readonly IFileSystem _fileSystem;
+        private readonly InitializeBackup _initializeBackup;
 
-
-        public Backup(BackupSource backupSource)
+        public Backup(ApplicationFolder applicationFolder, IFileSystem fileSystem, InitializeBackup initializeBackup)
         {
-            _backupFolderPath= Path.Combine(_backupRootPath,backupSource.ApplicationName);
-            _backupFilePath= Path.Combine(_backupFolderPath, backupSource.ConfigFile);
-            _backupSource=backupSource;
+            _fileSystem = fileSystem;
+            _applicationFolder=applicationFolder;
+            _initializeBackup = initializeBackup;
         }
 
-        public bool BackupRootFolderExist()
-            => Directory.Exists(_backupRootPath);
+        public IDirectoryInfo CreateApplicationFolder()
+            => _fileSystem.Directory.CreateDirectory(Path.Combine(_initializeBackup.BackupFolderPath, _applicationFolder.Name));
 
-        public DirectoryInfo CreateBackupRoot()
-            => Directory.CreateDirectory(_backupRootPath);
+        public void CopyFile()
+            => _fileSystem.File.Copy(_applicationFolder.FilePath, Path.Combine(_initializeBackup.BackupFolderPath, _applicationFolder.Name,_applicationFolder.FileName),true);
 
-
-        public DirectoryInfo CreateApplicationBackupFolder()
-            => Directory.CreateDirectory(_backupFolderPath);
-
-        public void CopyFileToBackup()
-            => File.Copy(_backupSource.FilePath, _backupFilePath);
-
-        // TODO use _backupSource.FilePath as content
-        public void StoreSrcPathAsTXTFile()
-            => File.WriteAllText(_backupFolderPath,$@"{_backupFolderPath}/SourcePath.txt");
+        public void SaveOriginalFilePath()
+            => File.WriteAllText(Path.Combine(_initializeBackup.BackupFolderPath,_applicationFolder.Name,"ConfigSourcePath.txt"),_applicationFolder.FilePath);
     }
 }
