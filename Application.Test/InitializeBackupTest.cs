@@ -1,13 +1,13 @@
 using Application.src;
 using Xunit;
-using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
 
 namespace Application.Test
 {
     public class InitializeBackupTest
     {
         // Arrange
-        private static readonly IFileSystem _fileSystem = new FileSystem();
+        private static readonly MockFileSystem _fileSystem = new MockFileSystem();
         private readonly InitializeBackup _initializeBackup 
             = new InitializeBackup(_fileSystem, @"./TestResources/MockBackupFolder/");
 
@@ -17,7 +17,7 @@ namespace Application.Test
             // Act
             var exists= _initializeBackup.FolderExists();
             // Assert
-            Assert.True(exists);
+            Assert.False(exists);
         }
 
         [Fact]
