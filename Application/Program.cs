@@ -26,16 +26,18 @@ namespace Application
             var folderName = PromptUser("Name of application: ");
 
             var file = fileSystem.Path.GetFileName(paths[int.Parse(fileIndex)]);
-            var backUp = new Backup(new ApplicationFolder(file , paths[int.Parse(fileIndex)] , folderName), fileSystem, initBackup);
+            var srcApplication= new ApplicationFolder(file , paths[int.Parse(fileIndex)] , folderName);
+
+            var backUp = new Backup(fileSystem, initBackup);
 
 
-            var result = backUp.CreateApplicationFolder();
+            var result = backUp.CreateApplicationFolder(srcApplication.Name);
             Console.WriteLine($"Application folder created: {result.Exists}");
 
-            backUp.CopyFile();
+            backUp.CopyFile(srcApplication.FileName, srcApplication.Name);
             // Console.WriteLine($"File copied: {copiedFile.Exists}");
 
-            backUp.SaveOriginalFilePath();
+            backUp.SaveOriginalFilePath(srcApplication.FilePath, srcApplication.Name);
             // Console.WriteLine($"Original filepath backed up: {backedUpPath.Exists}");
 
             Console.WriteLine($"File: {file} is backed up with foldername: {folderName}");
