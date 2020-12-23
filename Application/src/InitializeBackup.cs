@@ -3,6 +3,7 @@ using System.IO.Abstractions;
 
 namespace Application.src
 {
+    // TODO: Make class static
     public class InitializeBackup
     {
         private static readonly string _appDataLocal = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
