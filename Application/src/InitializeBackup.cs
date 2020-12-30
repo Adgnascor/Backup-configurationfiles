@@ -4,22 +4,19 @@ using System.IO.Abstractions;
 namespace Application.src
 {
     // TODO: Make class static
-    public class InitializeBackup
+    public static class InitializeBackup
     {
         private static readonly string _appDataLocal = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        public string BackupFolderPath { get; private set; }
-        private readonly IFileSystem _fileSystem;
-
-        public InitializeBackup(IFileSystem fileSystem, string backupFolderPath)
+        public static bool FolderExists(IFileSystem fileSystem, string backupFolderPath)
         {
-            _fileSystem =  fileSystem;
-            BackupFolderPath=  backupFolderPath?? $@"{_appDataLocal}/backup-configurationfiles" ;
+
+            backupFolderPath=  backupFolderPath?? $@"{_appDataLocal}/backup-configurationfiles" ;
+            return fileSystem.Directory.Exists(backupFolderPath);
         }
-
-        public bool FolderExists()
-            => _fileSystem.Directory.Exists(BackupFolderPath);
-
-        public IDirectoryInfo CreateFolder()
-            => _fileSystem.Directory.CreateDirectory(BackupFolderPath);
+        public static IDirectoryInfo CreateFolder(IFileSystem fileSystem, string backupFolderPath)
+        {
+            backupFolderPath=  backupFolderPath?? $@"{_appDataLocal}/backup-configurationfiles" ;
+            return fileSystem.Directory.CreateDirectory(backupFolderPath);
+        }
     }
 }

@@ -9,8 +9,6 @@ namespace Application.src
         public static Dictionary<string, string> DirectoryPathsAndFilenames(IFileSystem fileSystem, string currentDirectory)
         {
             var filePaths = fileSystem.Directory.GetFiles(currentDirectory);
-            string[] fileNames = default;
-
             return filePaths.ToDictionary(x=> fileSystem.Path.GetFileName(x));
         }
     }
