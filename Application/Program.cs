@@ -20,12 +20,7 @@ namespace Application
             var pathsAndFilenames = new BackupTool()
             .DirectoryPathsAndFilenames(fileSystem, Environment.CurrentDirectory);
 
-            foreach (var item in pathsAndFilenames)
-            {
-                Console.WriteLine($"Path: {item.Key} Name: {item.Value}");
-            }
-
-/*             var filePaths = fileSystem.Directory
+            var filePaths = fileSystem.Directory
             .GetFiles(Environment.CurrentDirectory);
 
             for(var i = 0; i< filePaths.Length; i++)
@@ -54,7 +49,7 @@ namespace Application
             backUp.SaveOriginalFilePath(applicationToBackup.FilePath, applicationToBackup.Name);
             // Console.WriteLine($"Original filepath backed up: {backedUpPath.Exists}");
 
-            Console.WriteLine($"File: {file} is backed up with foldername: {folderName}"); */
+            Console.WriteLine($"File: {file} is backed up with foldername: {folderName}");
             Console.ReadKey();
         }
 

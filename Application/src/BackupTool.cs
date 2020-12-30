@@ -4,13 +4,9 @@ using System.Linq;
 
 namespace Application.src
 {
-    public class BackupTool
+    public static class BackupTool
     {
-        public BackupTool()
-        {
-        }
-
-        public Dictionary<string, string> DirectoryPathsAndFilenames(IFileSystem fileSystem, string currentDirectory)
+        public static Dictionary<string, string> DirectoryPathsAndFilenames(IFileSystem fileSystem, string currentDirectory)
         {
             var filePaths = fileSystem.Directory.GetFiles(currentDirectory);
             string[] fileNames = default;
