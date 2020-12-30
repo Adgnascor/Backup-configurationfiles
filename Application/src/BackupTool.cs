@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.IO.Abstractions;
+using System.Linq;
 
 namespace Application.src
 {
@@ -8,9 +10,12 @@ namespace Application.src
         {
         }
 
-        public Dictionary<string, string> StorePathsAndFilenames(string currentDirectory)
+        public Dictionary<string, string> DirectoryPathsAndFilenames(IFileSystem fileSystem, string currentDirectory)
         {
-            return null;
+            var filePaths = fileSystem.Directory.GetFiles(currentDirectory);
+            string[] fileNames = default;
+
+            return filePaths.ToDictionary(x=> fileSystem.Path.GetFileName(x));
         }
     }
 }

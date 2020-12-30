@@ -18,9 +18,14 @@ namespace Application
 
             // TODO - Create method that returns a dict with filename and filepath
             var pathsAndFilenames = new BackupTool()
-            .StorePathsAndFilenames(Environment.CurrentDirectory);
-            
-            var filePaths = fileSystem.Directory
+            .DirectoryPathsAndFilenames(fileSystem, Environment.CurrentDirectory);
+
+            foreach (var item in pathsAndFilenames)
+            {
+                Console.WriteLine($"Path: {item.Key} Name: {item.Value}");
+            }
+
+/*             var filePaths = fileSystem.Directory
             .GetFiles(Environment.CurrentDirectory);
 
             for(var i = 0; i< filePaths.Length; i++)
@@ -31,6 +36,7 @@ namespace Application
 
             var file = fileSystem.Path
             .GetFileName(filePaths[int.Parse(fileIndex)]);
+
             var applicationToBackup= new ApplicationFolder(
                 file , filePaths[int.Parse(fileIndex)] , folderName);
 
@@ -39,7 +45,7 @@ namespace Application
 
             var result = backUp.CreateApplicationFolder(
                 applicationToBackup.Name);
-                
+
             Console.WriteLine($"Application folder created: {result.Exists}");
 
             backUp.CopyFile(applicationToBackup.FileName, applicationToBackup.Name);
@@ -48,11 +54,11 @@ namespace Application
             backUp.SaveOriginalFilePath(applicationToBackup.FilePath, applicationToBackup.Name);
             // Console.WriteLine($"Original filepath backed up: {backedUpPath.Exists}");
 
-            Console.WriteLine($"File: {file} is backed up with foldername: {folderName}");
+            Console.WriteLine($"File: {file} is backed up with foldername: {folderName}"); */
             Console.ReadKey();
         }
 
-        private static string PromptUser(string question) 
+        private static string PromptUser(string question)
         {
             Console.Write(question);
             return Console.ReadLine();
