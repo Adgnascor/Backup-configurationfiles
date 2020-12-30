@@ -17,27 +17,35 @@ namespace Application
                  initBackup.CreateFolder();
 
             // TODO - Create method that returns a dict with filename and filepath
-            var paths = fileSystem.Directory.GetFiles(Environment.CurrentDirectory);
+            var pathsAndFilenames = new BackupTool()
+            .StorePathsAndFilenames(Environment.CurrentDirectory);
+            
+            var filePaths = fileSystem.Directory
+            .GetFiles(Environment.CurrentDirectory);
 
-            for(var i = 0; i< paths.Length; i++)
-                Console.WriteLine($"{i}. {paths[i]}");
+            for(var i = 0; i< filePaths.Length; i++)
+                Console.WriteLine($"{i}. {filePaths[i]}");
 
             var fileIndex = PromptUser("Backup: ");
             var folderName = PromptUser("Name of application: ");
 
-            var file = fileSystem.Path.GetFileName(paths[int.Parse(fileIndex)]);
-            var srcApplication= new ApplicationFolder(file , paths[int.Parse(fileIndex)] , folderName);
+            var file = fileSystem.Path
+            .GetFileName(filePaths[int.Parse(fileIndex)]);
+            var applicationToBackup= new ApplicationFolder(
+                file , filePaths[int.Parse(fileIndex)] , folderName);
 
             var backUp = new Backup(fileSystem, initBackup);
 
 
-            var result = backUp.CreateApplicationFolder(srcApplication.Name);
+            var result = backUp.CreateApplicationFolder(
+                applicationToBackup.Name);
+                
             Console.WriteLine($"Application folder created: {result.Exists}");
 
-            backUp.CopyFile(srcApplication.FileName, srcApplication.Name);
+            backUp.CopyFile(applicationToBackup.FileName, applicationToBackup.Name);
             // Console.WriteLine($"File copied: {copiedFile.Exists}");
 
-            backUp.SaveOriginalFilePath(srcApplication.FilePath, srcApplication.Name);
+            backUp.SaveOriginalFilePath(applicationToBackup.FilePath, applicationToBackup.Name);
             // Console.WriteLine($"Original filepath backed up: {backedUpPath.Exists}");
 
             Console.WriteLine($"File: {file} is backed up with foldername: {folderName}");
