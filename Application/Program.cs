@@ -12,9 +12,11 @@ namespace Application
         {
             var fileSystem = new FileSystem();
 
-            IDirectoryInfo backupInitInfo = default;
+            IDirectoryInfo initializeBackupInfo = default;
             if(!InitializeBackup.FolderExists(fileSystem, null))
-                backupInitInfo = InitializeBackup.CreateFolder(fileSystem, null);
+                initializeBackupInfo = InitializeBackup.CreateFolder(fileSystem, null);
+            else
+                initializeBackupInfo = InitializeBackup.BackUpRootDirectory(fileSystem,null);
 
             var pathsAndFilenames = BackupTool
             .DirectoryPathsAndFilenames(fileSystem, Environment.CurrentDirectory);
@@ -30,7 +32,7 @@ namespace Application
                 pathsAndFilenames.ElementAt(int.Parse(fileIndex)).Key
                 , pathsAndFilenames.ElementAt(int.Parse(fileIndex)).Value, folderName);
 
-            var backUp = new Backup(fileSystem, backupInitInfo);
+            var backUp = new Backup(fileSystem, initializeBackupInfo);
 
             var result = backUp.CreateApplicationFolder(
                 applicationToBackup.Name);
@@ -38,10 +40,7 @@ namespace Application
             Console.WriteLine($"Application folder created: {result.Exists}");
 
             backUp.CopyFile(applicationToBackup.FileName, applicationToBackup.Name);
-            // Console.WriteLine($"File copied: {copiedFile.Exists}");
-
             backUp.SaveOriginalFilePath(applicationToBackup.FilePath, applicationToBackup.Name);
-            // Console.WriteLine($"Original filepath backed up: {backedUpPath.Exists}");
 
             Console.WriteLine($"File: {applicationToBackup.FileName} is backed up with foldername: {applicationToBackup.Name}");
             Console.ReadKey();
