@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.IO.Abstractions;
 namespace Application.src
 {
     public static class InitializeBackup
@@ -17,11 +16,9 @@ namespace Application.src
             return Directory.CreateDirectory(backupFolderPath);
         }
 
-        public static DirectoryInfo BackUpRootDirectory(string backupFolderPath)
+        public static DirectoryInfo RootOfApplication(string backupFolderPath)
         {
-            backupFolderPath=  backupFolderPath?? $@"{_appDataLocal}/backup-configurationfiles" ;
-            return new DirectoryInfo(backupFolderPath);
-            //return DirectoryInfo.FromDirectoryName(backupFolderPath);
+            return new DirectoryInfo(backupFolderPath?? $@"{_appDataLocal}/backup-configurationfiles" );
         }
     }
 }
