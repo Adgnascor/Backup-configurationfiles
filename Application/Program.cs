@@ -9,14 +9,13 @@ namespace Application
     {
         static void Main(string[] args)
         {
-            var fileSystem = new FileSystem();
 
             // TODO - Refactor this statement and clean it up
             IDirectoryInfo initializeBackupInfo = default;
-            if(!InitializeBackup.FolderExists(fileSystem, null))
-                initializeBackupInfo = InitializeBackup.CreateFolder(fileSystem, null);
+            if(!InitializeBackup.FolderExists(null))
+                initializeBackupInfo = InitializeBackup.CreateFolder(null);
             else
-                initializeBackupInfo = InitializeBackup.BackUpRootDirectory(fileSystem,null);
+                initializeBackupInfo = InitializeBackup.BackUpRootDirectory(null);
 
             var pathsAndFilenames = BackupTool
                 .DirectoryPathsAndFilenames(fileSystem, Environment.CurrentDirectory);
