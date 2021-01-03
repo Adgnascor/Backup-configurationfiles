@@ -359,4 +359,4 @@ MigrationBackup/
 **/resources/
 
 # Notes while developing
-.Notes.md
+./Notes.md
