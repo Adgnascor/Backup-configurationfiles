@@ -16,7 +16,9 @@ namespace Application.src
 
         // TODO: Make method returning some kind of status report
         public void CopyFile(string srcFile, string destFoldername)
-            => File.Copy(srcFile, Path.Combine(_initializeBackup.FullName, destFoldername, srcFile),true);
+        {
+            File.Copy(srcFile, Path.Combine(_initializeBackup.FullName, destFoldername, srcFile),true);
+        }
 
         // TODO: Make method returning some kind of status report
         public void StoreOriginalFilePath(string srcFilePath, string destFoldername)

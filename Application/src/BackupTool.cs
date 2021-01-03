@@ -6,7 +6,7 @@ namespace Application.src
 {
     public static class BackupTool
     {
-        public static Dictionary<string, string> DirectoryPathsAndFilenames(string currentDirectory)
+        public static Dictionary<string, string> GetFilenamesWithPaths(string currentDirectory)
         {
             var filePaths = Directory.GetFiles(currentDirectory);
             return filePaths.ToDictionary(x=> Path.GetFileName(x));
