@@ -10,36 +10,36 @@ namespace Application
         static void Main(string[] args)
         {
 
-            // TODO - Refactor this statement and clean it up
             var rootOfApplication = InitializeBackup.RootOfApplication(null);
             if(!InitializeBackup.FolderExists(null))
                 rootOfApplication = InitializeBackup.CreateFolder(null);
 
-            var pathsAndFilenames = BackupTool
-                .DirectoryPathsAndFilenames(Environment.CurrentDirectory);
+            var filenamesWithPaths = BackupTool
+                .GetFilenamesWithPaths(Environment.CurrentDirectory);
 
-            for (int i = 0; i < pathsAndFilenames.Count; i++)
-                Console.WriteLine($"{i}. {pathsAndFilenames.ElementAt(i).Key}");
+            for (int i = 0; i < filenamesWithPaths.Count; i++)
+                Console.WriteLine($"{i}. {filenamesWithPaths.ElementAt(i).Key}");
 
             // TODO - Handle input from user
-            var fileIndex = PromptUser("Backup: ");
+            var fileIndex = PromptUser("Pick file to save: ");
             var folderName = PromptUser("Name of application: ");
 
-            var applicationToBackup= new ApplicationFolder(
-                pathsAndFilenames.ElementAt(int.Parse(fileIndex)).Key
-                , pathsAndFilenames.ElementAt(int.Parse(fileIndex)).Value, folderName);
+            var folderToBackup= new ApplicationFolder(
+                filenamesWithPaths.ElementAt(int.Parse(fileIndex)).Key
+                , filenamesWithPaths.ElementAt(int.Parse(fileIndex)).Value
+                , folderName);
 
             var backUp = new Backup(rootOfApplication);
 
             var result = backUp.CreateApplicationFolder(
-                applicationToBackup.Name);
+                folderToBackup.Name);
 
             Console.WriteLine($"Application folder created: {result.Exists}");
 
-            backUp.CopyFile(applicationToBackup.FileName, applicationToBackup.Name);
-            backUp.SaveOriginalFilePath(applicationToBackup.FilePath, applicationToBackup.Name);
+            backUp.CopyFile(folderToBackup.File, folderToBackup.Name);
+            backUp.StoreOriginalFilePath(folderToBackup.FilePath, folderToBackup.Name);
 
-            Console.WriteLine($"File: {applicationToBackup.FileName} is backed up with foldername: {applicationToBackup.Name}");
+            Console.WriteLine($"File: {folderToBackup.File} is backed up with foldername: {folderToBackup.Name}");
             Console.ReadKey();
         }
 
