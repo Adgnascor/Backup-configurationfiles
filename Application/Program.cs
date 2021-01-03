@@ -1,5 +1,6 @@
 ﻿using System;
-using System.IO.Abstractions;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Application.src;
 
@@ -9,41 +10,54 @@ namespace Application
     {
         static void Main(string[] args)
         {
-            var fileSystem = new FileSystem();
 
-            // TODO - Refactor this statement and clean it up
-            IDirectoryInfo initializeBackupInfo = default;
-            if(!InitializeBackup.FolderExists(fileSystem, null))
-                initializeBackupInfo = InitializeBackup.CreateFolder(fileSystem, null);
-            else
-                initializeBackupInfo = InitializeBackup.BackUpRootDirectory(fileSystem,null);
+            var rootOfApplication = InitializeBackup.RootOfApplication(null);
+            if (!InitializeBackup.FolderExists(null))
+                rootOfApplication = InitializeBackup.CreateFolder(null);
 
-            var pathsAndFilenames = BackupTool
-                .DirectoryPathsAndFilenames(fileSystem, Environment.CurrentDirectory);
+            var filenamesWithPaths = BackupTool
+                .GetFilenamesWithPaths(Environment.CurrentDirectory);
+            PrintFileNames(filenamesWithPaths);
 
-            for (int i = 0; i < pathsAndFilenames.Count; i++)
-                Console.WriteLine($"{i}. {pathsAndFilenames.ElementAt(i).Key}");
-
-            // TODO - Handle input from user
-            var fileIndex = PromptUser("Backup: ");
+            int fileIndex = ValidateUserInputOfPickedFile(filenamesWithPaths);
             var folderName = PromptUser("Name of application: ");
 
-            var applicationToBackup= new ApplicationFolder(
-                pathsAndFilenames.ElementAt(int.Parse(fileIndex)).Key
-                , pathsAndFilenames.ElementAt(int.Parse(fileIndex)).Value, folderName);
+            var folderToBackup = new ApplicationFolder(
+                filenamesWithPaths.ElementAt(fileIndex).Key
+                , filenamesWithPaths.ElementAt(fileIndex).Value
+                , folderName);
 
-            var backUp = new Backup(fileSystem, initializeBackupInfo);
+            var backUp = new Backup(rootOfApplication);
+            var result = backUp.CreateApplicationFolder(folderToBackup.Name);
 
-            var result = backUp.CreateApplicationFolder(
-                applicationToBackup.Name);
+            backUp.CopyFile(folderToBackup.File, folderToBackup.Name);
+            backUp.StoreOriginalFilePath(folderToBackup.FilePath, folderToBackup.Name);
 
-            Console.WriteLine($"Application folder created: {result.Exists}");
+            Console.WriteLine($"Files stored in: {folderToBackup.Name}\n");
+            foreach(var file in result.GetFiles())
+                Console.WriteLine($"- {file.Name}");
 
-            backUp.CopyFile(applicationToBackup.FileName, applicationToBackup.Name);
-            backUp.SaveOriginalFilePath(applicationToBackup.FilePath, applicationToBackup.Name);
-
-            Console.WriteLine($"File: {applicationToBackup.FileName} is backed up with foldername: {applicationToBackup.Name}");
             Console.ReadKey();
+        }
+
+        private static int ValidateUserInputOfPickedFile(Dictionary<string, string> filenamesWithPaths)
+        {
+            int fileIndex;
+            do
+            {
+                var userInput = PromptUser("Pick file to save: ");
+                if (int.TryParse(userInput, out fileIndex) && fileIndex < filenamesWithPaths.Count)
+                    break;
+
+                Console.WriteLine(" Not a valid input");
+            } while (true);
+            return fileIndex;
+        }
+
+        private static void PrintFileNames(Dictionary<string, string> filenamesWithPaths)
+        {
+            for (int i = 0; i < filenamesWithPaths.Count; i++)
+                Console.WriteLine($"{i}. {filenamesWithPaths.ElementAt(i).Key}");
         }
 
         private static string PromptUser(string question)

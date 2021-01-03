@@ -4,15 +4,15 @@ namespace Application.src
     {
         public string Name { get; private set; }
 
-        public string FileName { get; private set; }
+        public string File { get; private set; }
 
         public string FilePath { get; private set; }
 
-        public ApplicationFolder(string FileName,string FilePath,string Name)
+        public ApplicationFolder(string FileName,string FilePath,string FolderName)
         {
-            this.FileName = FileName;
+            this.File = FileName;
             this.FilePath = FilePath;
-            this.Name = Name;
+            this.Name = FolderName;
         }
     }
 }
