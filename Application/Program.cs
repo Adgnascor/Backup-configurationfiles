@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using Application.src;
@@ -12,6 +11,7 @@ namespace Application
         {
             var fileSystem = new FileSystem();
 
+            // TODO - Refactor this statement and clean it up
             IDirectoryInfo initializeBackupInfo = default;
             if(!InitializeBackup.FolderExists(fileSystem, null))
                 initializeBackupInfo = InitializeBackup.CreateFolder(fileSystem, null);
@@ -19,7 +19,7 @@ namespace Application
                 initializeBackupInfo = InitializeBackup.BackUpRootDirectory(fileSystem,null);
 
             var pathsAndFilenames = BackupTool
-            .DirectoryPathsAndFilenames(fileSystem, Environment.CurrentDirectory);
+                .DirectoryPathsAndFilenames(fileSystem, Environment.CurrentDirectory);
 
             for (int i = 0; i < pathsAndFilenames.Count; i++)
                 Console.WriteLine($"{i}. {pathsAndFilenames.ElementAt(i).Key}");

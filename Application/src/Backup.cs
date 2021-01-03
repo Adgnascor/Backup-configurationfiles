@@ -21,7 +21,6 @@ namespace Application.src
         public void CopyFile(string srcFile, string destFoldername)
             => _fileSystem.File.Copy(srcFile, Path.Combine(_initializeBackup.FullName, destFoldername, srcFile),true);
 
-
         // TODO: Make method returning some kind of status report
         public void SaveOriginalFilePath(string srcFilePath, string destFoldername)
             => File.WriteAllText(Path.Combine(_initializeBackup.FullName,destFoldername,"ConfigSourcePath.txt"), srcFilePath);

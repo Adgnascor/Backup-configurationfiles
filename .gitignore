@@ -357,3 +357,6 @@ MigrationBackup/
 
 # resource folder
 **/resources/
+
+# Notes while developing
+.Notes.md
